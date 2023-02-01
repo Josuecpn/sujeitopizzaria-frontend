@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import logoImg from "../../../public/logo.svg";
 import { AuthContext } from "@/contexts/AuthContext";
+import { toast } from "react-toastify";
 
 export default function SignUp() {
   const { signUp } = useContext(AuthContext);
@@ -23,7 +24,7 @@ export default function SignUp() {
     event.preventDefault();
 
     if (name === "" || email === "" || password === "") {
-      alert("Preencha todos os campos corretamente.");
+      toast.warning("Preencha todos os campos corretamente.")
       return;
     }
 

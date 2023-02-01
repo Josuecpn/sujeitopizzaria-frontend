@@ -10,6 +10,7 @@ import logoImg from "../../public/logo.svg";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { AuthContext } from "../contexts/AuthContext";
+import { toast } from "react-toastify";
 
 export default function Home() {
   const { signIn } = useContext(AuthContext);
@@ -23,7 +24,7 @@ export default function Home() {
     event.preventDefault();
 
     if (email === "" || password === "") {
-      alert("Preencha os dados para o login.");
+      toast.warning("Preencha todos campos.");
       return;
     }
 
