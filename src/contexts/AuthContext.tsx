@@ -1,7 +1,7 @@
 import { api } from "@/services/apiClient";
 import Router from "next/router";
-import { destroyCookie, setCookie } from "nookies";
-import { createContext, ReactNode, useState } from "react";
+import { destroyCookie, setCookie, parseCookies } from "nookies";
+import { createContext, ReactNode, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 type AuthContextData = {
@@ -48,6 +48,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserProps>();
   const isAuthenticated = !!user;
 
+  useEffect(() => {
+    const { "@nextauth.token": token } = parseCookies();
+
+    if (token) {
+      api.get("/me")
+        .then((response) => {
+          const { id, name, email } = response.data;
+
+          setUser({
+            id,
+            name,
+            email,
+          });
+        })
+        .catch(() => {
+          signOut();
+        });
+    }
+  });
+
   async function signIn({ email, password }: SignInProps) {
     try {
       const response = await api.post("/session", {
@@ -71,11 +91,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
 
-      toast.success("Logado com sucesso!")
+      toast.success("Logado com sucesso!");
 
       Router.push("/dashboard");
     } catch (error) {
-      toast.error("Erro ao acessar")
+      toast.error("Erro ao acessar");
       console.log("Erro ao acessar ", error);
     }
   }
@@ -92,7 +112,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       Router.push("/");
     } catch (error) {
-      toast.error("Erro ao criar.")
+      toast.error("Erro ao criar.");
       console.log("Erro ao cadastrar ", error);
     }
   }
