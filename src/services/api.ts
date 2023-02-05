@@ -3,7 +3,7 @@ import axios, { AxiosError } from "axios";
 import { parseCookies } from "nookies";
 import { AuthTokenError } from "./errors/AuthTokenError";
 
-export function setupAPIClient(ctx = undefined) {
+export function setupAPIClient(ctx: object | undefined = undefined) {
   let cookies = parseCookies(ctx);
 
   const api = axios.create({
